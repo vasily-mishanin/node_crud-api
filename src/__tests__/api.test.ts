@@ -15,6 +15,7 @@ const testUser1 = {
 };
 
 let userId: string = ''; // will get it after creation
+const wrongUUID = 'abaa5044-4309-4249-a8b4-329d317920ff';
 
 afterAll(async () => {
   server.close();
@@ -159,9 +160,11 @@ describe('Scenario 3 - api/users', () => {
 
   it('GET one api/users/:id', async () => {
     const response = await request(baseUrl)
-      .get(`/api/users/${userId}`)
-      .expect(200);
-    expect(response.body.user.id).toEqual(userId);
-    expect(response.body.user.hobbies[0]).toEqual('smoking');
+      .get(`/api/users/${wrongUUID}`)
+      .expect(404);
+
+    expect(response.body.message).toEqual(
+      `User with id ${wrongUUID} NOT FOUND`,
+    );
   });
 });
