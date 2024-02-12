@@ -37,3 +37,10 @@ export const getPostBodyAsync = (req: RequestTypeNode) => {
 // mock async action
 export const wait = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
+
+//validate UUID
+export const isUUID = (id: string) => {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    id,
+  );
+};

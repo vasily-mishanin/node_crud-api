@@ -37,6 +37,8 @@ export const routes: RoutesType = {
 
   '/api/users/:id': {
     GET: userController.getUserById,
+    PUT: (req: RequestTypeNode, res: ResponseTypeNode) =>
+      validateUserData(req, res, userController.updateUser),
   },
 
   notFound: {

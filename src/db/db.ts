@@ -1,4 +1,4 @@
-import { ObjectUser, User } from '../types';
+import { ObjectUser, PartialUser, User } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { wait } from '../utils';
 import { TIMEOUT_ms } from '../constants';
@@ -23,6 +23,10 @@ export class UsersDB {
 
   get users() {
     return this.usersData;
+  }
+
+  set users(value: User[]) {
+    this.usersData = value;
   }
 
   getUserById(id: string): Promise<User | null> {
@@ -50,6 +54,24 @@ export class UsersDB {
         const newUser = { id: userId, ...user };
         this.users.push(newUser);
         resolve(newUser);
+      }, TIMEOUT_ms);
+    });
+  }
+
+  updateUser(userData: PartialUser): Promise<User | null> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const existingUser = this.users.find((u) => u.id === userData.id);
+        if (!existingUser) {
+          resolve(null);
+        } else {
+          const updatedUser: User = { ...existingUser, ...userData };
+
+          this.users = this.users.map((user) =>
+            user.id === userData.id ? updatedUser : user,
+          );
+          resolve(updatedUser);
+        }
       }, TIMEOUT_ms);
     });
   }

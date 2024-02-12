@@ -1,10 +1,11 @@
 import {
   ArrayOfUsers,
+  PartialUser,
   RequestTypeNode,
   ResponseTypeNode,
   User,
 } from '../types';
-import { response } from '../utils';
+import { isUUID, response } from '../utils';
 import * as userService from '../services/user-service';
 
 export const getUsers = async (req: RequestTypeNode, res: ResponseTypeNode) => {
@@ -60,5 +61,40 @@ export const getUserById = async (
     }
   } catch (error) {
     console.log(`Error while getting on user with id: ${userId}`, error);
+  }
+};
+
+export const updateUser = async (
+  req: RequestTypeNode,
+  res: ResponseTypeNode,
+  user: PartialUser,
+) => {
+  const userId = req.params?.id;
+  if (!userId) {
+    response(res, {
+      status: 400,
+      data: { message: 'No user ID provided' },
+    });
+  } else if (!isUUID(userId)) {
+    response(res, {
+      status: 400,
+      data: { message: 'Provided user ID is not UUID' },
+    });
+  }
+
+  user = { ...user, id: userId };
+
+  try {
+    const updatedUser = await userService.updateUser(user);
+    if (updatedUser) {
+      response(res, { status: 200, data: { user: updatedUser } });
+    } else {
+      response(res, {
+        status: 404,
+        data: { message: `User with id ${userId} NOT FOUND` },
+      });
+    }
+  } catch (error) {
+    console.log('Error while updating user', error);
   }
 };

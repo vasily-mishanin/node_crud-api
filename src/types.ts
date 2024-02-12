@@ -7,6 +7,9 @@ export interface User {
   hobbies: string[];
 }
 
+//export type PartialUser = Partial<User> & Required<Pick<User, 'id'>>;
+export type PartialUser = Partial<User>;
+
 export type ResponseTypeNode = http.ServerResponse<http.IncomingMessage> & {
   req: http.IncomingMessage;
 };
@@ -64,6 +67,23 @@ export const ObjectUser = object({
   age: numberGuard,
   hobbies: array(stringGuard),
 });
+
+// export const ObjectPartialUser = (val: unknown): PartialUser => {
+//   if (val === null || typeof val !== 'object')
+//     throw new Error(`${val} is not  of type ${typeof val}`);
+
+//   if (typeof val === 'object') {
+//     const userKeys = ['id', 'username', 'age', 'hobbies'];
+//     const out: Record<string, string | string[] | number> = {};
+//     for (const k in val) {
+//       if (userKeys.includes(k)) {
+//         out[k] = val[k];
+//       }
+//     }
+
+//     return out;
+//   }
+// };
 
 export const ObjectNewUser = object({
   username: stringGuard,

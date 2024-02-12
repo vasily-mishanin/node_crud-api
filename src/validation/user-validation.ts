@@ -10,6 +10,16 @@ export const validateUserData = async (
 ) => {
   try {
     const body = await getPostBodyAsync(req);
+    const method = req.method?.toUpperCase();
+    const userKeys = ['username', 'age', 'hobbies'];
+    const bodyKeys = Object.keys(body as Object);
+    if (
+      method === 'PUT' &&
+      bodyKeys.some((key) => userKeys.some((k) => k === key))
+    ) {
+      nextCallback(req, res, body);
+      return;
+    }
 
     const user = ObjectNewUser(body); // typeguard for incoming data
 
