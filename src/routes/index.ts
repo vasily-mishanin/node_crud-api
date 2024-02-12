@@ -35,6 +35,10 @@ export const routes: RoutesType = {
       validateUserData(req, res, userController.createUser),
   },
 
+  '/api/users/:id': {
+    GET: userController.getUserById,
+  },
+
   notFound: {
     resp: (_req: http.IncomingMessage, res: ResponseTypeNode) => {
       response(res, {

@@ -11,7 +11,10 @@ export type ResponseTypeNode = http.ServerResponse<http.IncomingMessage> & {
   req: http.IncomingMessage;
 };
 
-export type RequestTypeNode = http.IncomingMessage;
+export type RequestTypeNode = {
+  params?: Record<string, string>;
+  query?: Record<string, string | string[] | undefined>;
+} & http.IncomingMessage;
 
 //// Type Guards for runtime
 type TypeGuard<T> = (val: unknown) => T;

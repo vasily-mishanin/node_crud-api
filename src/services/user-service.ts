@@ -13,5 +13,11 @@ export const getUsers = () => {
 };
 
 export const addUser = async (user: Omit<User, 'id'>) => {
-  await db.addNewUser(user);
+  const createdUser = await db.addNewUser(user);
+  return createdUser;
+};
+
+export const getOneUser = async (id: string) => {
+  const user = await db.getUserById(id);
+  return user;
 };

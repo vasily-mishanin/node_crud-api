@@ -2,6 +2,7 @@ import http from 'http';
 import url from 'url';
 import { loggerMiddleware } from './middleware';
 import { routes } from './routes';
+import { RequestTypeNode } from './types';
 
 const PORT = process.env.PORT || 4000;
 
@@ -12,17 +13,55 @@ const server = http.createServer((req, res) => {
   const method = req.method?.toUpperCase() || '';
 
   let handler = routes[path] && routes[path][method];
+  const _req: RequestTypeNode = req;
+
+  // Dynamic handler
+  if (!handler) {
+    const routeDynamicKeys = Object.keys(routes).filter((key) =>
+      key.includes(':'),
+    );
+    const matchedKey = routeDynamicKeys.find((key) => {
+      // replacing each segment of the key that starts with a colon (:)
+      const regex = new RegExp(`^${key.replace(/:[^/]+/g, '([^/]+)')}$`);
+      console.log({ regex });
+      return regex.test(path); // /api/users/:123 => /api/users/123
+    });
+
+    console.log({ matchedKey });
+
+    if (matchedKey) {
+      // now we need to get paramteres (:id)
+      const regex = new RegExp(`^${matchedKey.replace(/:[^/]+/g, '([^/]+)')}$`);
+
+      const dynamicParams = regex.exec(path)?.slice(1);
+
+      const paramKeys = matchedKey
+        ?.match(/:[^/]+/g)
+        ?.map((key) => key.substring(1));
+
+      if (paramKeys) {
+        const params = dynamicParams?.reduce(
+          (acc, val, i) => ({ ...acc, [paramKeys[i]]: val }),
+          {},
+        );
+        console.log(params);
+        _req.params = params;
+      }
+
+      handler = routes[matchedKey][method];
+    }
+  }
 
   if (!handler) {
     handler = routes.notFound.resp;
   }
 
-  // req.query = {};
-  // for (const key in query) {
-  //   req.query[key] = query[key];
-  // }
+  _req.query = {};
+  for (const key in query) {
+    _req.query[key] = query[key];
+  }
 
-  handler(req, res);
+  handler(_req, res);
 });
 
 server.on('request', loggerMiddleware);

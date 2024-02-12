@@ -1,5 +1,7 @@
-import { User } from '../types';
+import { ObjectUser, User } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { wait } from '../utils';
+import { TIMEOUT_ms } from '../constants';
 
 export class UsersDB {
   private usersData!: User[];
@@ -23,22 +25,32 @@ export class UsersDB {
     return this.usersData;
   }
 
-  getUserById(id: string) {
-    const user = this.users.find((user) => user.id === id);
-    return user || null;
+  getUserById(id: string): Promise<User | null> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        let user: User | null;
+        try {
+          user = ObjectUser(this.users.find((user) => user.id === id));
+          resolve(user);
+        } catch (error) {
+          resolve(null);
+        }
+      }, TIMEOUT_ms);
+    });
   }
 
-  addNewUser(user: Omit<User, 'id'>) {
+  addNewUser(user: Omit<User, 'id'>): Promise<User | null> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const userId = uuidv4();
         if (this.users.findIndex((user) => user.id === userId) > -1) {
-          reject('Error in DB when creating new user');
+          resolve(null);
           throw Error('Error in DB when creating new user');
         }
-        this.users.push({ id: userId, ...user });
-        resolve(true);
-      }, 1000);
+        const newUser = { id: userId, ...user };
+        this.users.push(newUser);
+        resolve(newUser);
+      }, TIMEOUT_ms);
     });
   }
 }

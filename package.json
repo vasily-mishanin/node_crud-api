@@ -4,7 +4,7 @@
   "description": "simple CRUD node js api",
   "main": "dist/bundle.js",
   "scripts": {
-    "start:dev": "nodemon --env-file=.env",
+    "start:dev": "nodemon",
     "start:prod": "npm run build && node --env-file=.env dist/bundle.js",
     "build": "webpack --mode production",
     "lint": "eslint . --ext .ts",
