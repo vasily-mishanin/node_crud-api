@@ -26,3 +26,8 @@ export const updateUser = async (user: PartialUser) => {
   const updatedUser = await db.updateUser(user);
   return updatedUser;
 };
+
+export const deleteUser = async (id: string) => {
+  const deletedUser = await db.deleteUserById(id);
+  return deletedUser;
+};

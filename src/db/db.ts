@@ -3,6 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { wait } from '../utils';
 import { TIMEOUT_ms } from '../constants';
 
+const initialUser = {
+  id: '0a7bd231-3908-4673-ab79-40c4deecfe99',
+  username: 'Alex',
+  age: 33,
+  hobbies: ['hiking', 'drinking'],
+};
+
 export class UsersDB {
   private usersData!: User[];
   private static _instance: any;
@@ -11,9 +18,7 @@ export class UsersDB {
     if (UsersDB._instance) {
       return UsersDB._instance;
     }
-    this.usersData = [
-      { id: 'abc', username: 'Alex', age: 33, hobbies: ['hiking', 'drinking'] },
-    ];
+    this.usersData = [initialUser];
     UsersDB._instance = this;
   }
 
@@ -71,6 +76,25 @@ export class UsersDB {
             user.id === userData.id ? updatedUser : user,
           );
           resolve(updatedUser);
+        }
+      }, TIMEOUT_ms);
+    });
+  }
+
+  deleteUserById(id: string): Promise<User | null> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        let user: User | null;
+        try {
+          user = ObjectUser(this.users.find((user) => user.id === id));
+          if (user) {
+            this.users = this.users.filter((user) => user.id !== id);
+            resolve(user);
+          } else {
+          }
+          resolve(null);
+        } catch (error) {
+          resolve(null);
         }
       }, TIMEOUT_ms);
     });

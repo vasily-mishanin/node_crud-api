@@ -39,6 +39,7 @@ export const routes: RoutesType = {
     GET: userController.getUserById,
     PUT: (req: RequestTypeNode, res: ResponseTypeNode) =>
       validateUserData(req, res, userController.updateUser),
+    DELETE: userController.deleteUserById,
   },
 
   notFound: {

@@ -2,11 +2,11 @@
   "compilerOptions": {
     "module": "CommonJS",
     "target": "ES2020",
+    "esModuleInterop": true,
     "outDir": "./dist",
     "rootDir": "./src",
 
     "sourceMap": true,
-    "esModuleInterop": true,
 
     "noImplicitAny": true,
     "strict": true,
