@@ -6,7 +6,6 @@ type ResponseOptions = {
 };
 
 export function response(res: ResponseTypeNode, options: ResponseOptions) {
-  console.log('RESPONSE RUN', options.status);
   res.statusCode = options.status;
   res.setHeader('Content-Type', 'application/json');
   res.write(JSON.stringify(options.data));

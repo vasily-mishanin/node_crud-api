@@ -3,12 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { wait } from '../utils';
 import { TIMEOUT_ms } from '../constants';
 
-const initialUser = {
-  id: '0a7bd231-3908-4673-ab79-40c4deecfe99',
-  username: 'Alex',
-  age: 33,
-  hobbies: ['hiking', 'drinking'],
-};
+// const initialUser = {
+//   id: '0a7bd231-3908-4673-ab79-40c4deecfe99',
+//   username: 'Alex',
+//   age: 33,
+//   hobbies: ['hiking', 'drinking'],
+// };
 
 export class UsersDB {
   private usersData!: User[];
@@ -18,7 +18,7 @@ export class UsersDB {
     if (UsersDB._instance) {
       return UsersDB._instance;
     }
-    this.usersData = [initialUser];
+    this.usersData = [];
     UsersDB._instance = this;
   }
 

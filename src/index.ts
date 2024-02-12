@@ -6,7 +6,7 @@ import { RequestTypeNode } from './types';
 
 const PORT = process.env.PORT || 4000;
 
-const server = http.createServer((req, res) => {
+export const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url || '', true);
   const query = parsedUrl.query || '';
   const path = parsedUrl.pathname || '';
@@ -23,11 +23,8 @@ const server = http.createServer((req, res) => {
     const matchedKey = routeDynamicKeys.find((key) => {
       // replacing each segment of the key that starts with a colon (:)
       const regex = new RegExp(`^${key.replace(/:[^/]+/g, '([^/]+)')}$`);
-      console.log({ regex });
       return regex.test(path); // /api/users/:123 => /api/users/123
     });
-
-    console.log({ matchedKey });
 
     if (matchedKey) {
       // now we need to get paramteres (:id)
@@ -44,7 +41,6 @@ const server = http.createServer((req, res) => {
           (acc, val, i) => ({ ...acc, [paramKeys[i]]: val }),
           {},
         );
-        console.log(params);
         _req.params = params;
       }
 
